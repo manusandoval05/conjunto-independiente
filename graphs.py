@@ -1,5 +1,4 @@
 class Vertex:
-
     def __init__(self, name: str) -> None:
         self.name: str = name
         self.neighbors: list['Vertex'] = []
@@ -8,21 +7,18 @@ class Vertex:
         self.neighbors.append(neighbor)
 
 class Edge:
-    
-    def __init__(self, origin: Vertex, destination: Vertex):
+    def __init__(self, origin: Vertex, destination: Vertex) -> None:
         self.origin: Vertex = origin
         self.destination: Vertex = destination
 
 class Graph:
-
-    def __init__(self):
+    def __init__(self) -> None:
         self.vertices: dict[str, Vertex] = {}
         self.edges: list[Edge] = []
 
     def add_vertex(self, name: str) -> None:
         if name not in self.vertices:
-            vertex = Vertex(name)
-            self.vertices[name] = vertex
+            self.vertices[name] = Vertex(name)
 
     def add_edge(self, origin: str, destination: str) -> None:
         if origin in self.vertices and destination in self.vertices:
@@ -37,22 +33,28 @@ class Graph:
                 neighborhood.add(neighbor.name)
         return neighborhood
 
-    def get_reduced_graph(self, neighborhood):
+    def get_reduced_graph(self, neighborhood: set[str]) -> 'Graph':
         reduced_graph = Graph()
-        for vertex_name in neighborhood:
-            reduced_graph.add_vertex(vertex_name)
+        
+        # Keep only the vertices that are NOT in the neighborhood
+        for vertex_name in self.vertices:
+            if vertex_name not in neighborhood:
+                reduced_graph.add_vertex(vertex_name)
+                
+        # Keep edges where both origin and destination survived the reduction
         for edge in self.edges:
-            if edge.origin.name in neighborhood and edge.destination.name in neighborhood:
-                reduced_graph.add_edge(edge.origin, edge.destination)
+            if edge.origin.name not in neighborhood and edge.destination.name not in neighborhood:
+                reduced_graph.add_edge(edge.origin.name, edge.destination.name)
+                
         return reduced_graph
 
-    def is_independent_set(self, vertices: set[str]) -> bool:
+    def is_independent_set(self, vertex_names: set[str]) -> bool:
         for edge in self.edges:
-            if edge.origin.name in vertices and edge.destination.name in vertices:
+            if edge.origin.name in vertex_names and edge.destination.name in vertex_names:
                 return False
         return True
 
     def get_arbitrary_vertex(self) -> str | None:
         if not self.vertices:
             return None
-        return list(self.vertices.values())[0]  
+        return list(self.vertices.keys())[0]
