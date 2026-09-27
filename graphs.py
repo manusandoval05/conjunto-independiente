@@ -36,12 +36,11 @@ class Graph:
     def get_reduced_graph(self, neighborhood: set[str]) -> 'Graph':
         reduced_graph = Graph()
         
-        # Keep only the vertices that are NOT in the neighborhood
         for vertex_name in self.vertices:
             if vertex_name not in neighborhood:
                 reduced_graph.add_vertex(vertex_name)
                 
-        # Keep edges where both origin and destination survived the reduction
+        
         for edge in self.edges:
             if edge.origin.name not in neighborhood and edge.destination.name not in neighborhood:
                 reduced_graph.add_edge(edge.origin.name, edge.destination.name)
