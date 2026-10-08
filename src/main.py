@@ -14,15 +14,10 @@ def main() -> None:
     if graph is None:
         return
 
-    print("======================================================")
-    print(" STARTING ALGORITHM: INDEPENDENT SET (Theorem 3.6)")
-    print("======================================================\n")
+    print("A tiny little algorithm for the CONJUNTO INDEPENDIENTE problem")
     
     solution: set[str] = get_independent_set(graph, graph)
     
-    print("\n======================================================")
-    print(" FINAL RESULT")
-    print("======================================================")
     print(f"The independent set S(G) found is: {solution}\n")
 
 if __name__ == '__main__':
